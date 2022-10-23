@@ -18,6 +18,11 @@ inputs:
 runs:
   using: "composite"
   steps:
+    - name: Install foundry
+      run: >
+        curl -L https://foundry.paradigm.xyz | bash;
+        foundryup;
+      shell: bash
     - name: Collect contracts names
       id: contracts_names
       run: echo 'CONTRACTS=$(tr "\n" " " <<<$(sed "s/contract //g" <<<$(egrep -roh --exclude-dir=$IGNORE_FOLDERS "^contract\s\w+" $SRC_FOLDER)))) >> $GITHUB_OUTPUT
