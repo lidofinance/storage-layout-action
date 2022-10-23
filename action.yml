@@ -24,7 +24,7 @@ runs:
         version: nightly
     - name: Collect contracts names
       id: contracts_names
-      run: echo 'CONTRACTS=$(tr "\n" " " <<<$(sed "s/contract //g" <<<$(egrep -roh --exclude-dir=$IGNORE_FOLDERS "^contract\s\w+" $SRC_FOLDER)))) >> $GITHUB_OUTPUT
+      run: echo 'CONTRACTS=$(tr "\n" " " <<<$(sed "s/contract //g" <<<$(egrep -roh --exclude-dir=$IGNORE_FOLDERS "^contract\s\w+" $SRC_FOLDER))))' >> $GITHUB_OUTPUT
       shell: bash
       env:
         SRC_FOLDER: ${{ inputs.src-folder }}
