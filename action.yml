@@ -1,0 +1,38 @@
+name: "Storage layout"
+description: "Simple action to create storage layout file and assert changes in the storage layout after contracts update"
+inputs:
+  mode:
+    description: >
+      Action operation mode. 
+      generate - generate new .storage-layout file from existing contracts.
+      check - check that storage layout matches one in the .storage-layout file
+    default: check
+
+  src-folder:
+    description: "Path to folder with contracts sources"
+    default: ./contracts
+  ignore-folders:
+    description: >
+      Folders to exclude from contracts search.
+      Ex: ./contracts/mock - ignore single folder, {mock,test,template} - ignore multiple folders by name
+runs:
+  using: "composite"
+  steps:
+    - name: Collect contracts names
+      id: contracts_names
+      run: echo 'CONTRACTS=$(tr "\n" " " <<<$(sed "s/contract //g" <<<$(egrep -roh --exclude-dir=$IGNORE_FOLDERS "^contract\s\w+" $SRC_FOLDER)))) >> $GITHUB_OUTPUT
+      shell: bash
+      env:
+        SRC_FOLDER: ${{ inputs.src-folder }}
+        IGNORE_FOLDERS: ${{ inputs.ignore-folder }}
+    - name: Print contracts names
+      run: echo ${{ steps.contracts_names.outputs.CONTRACTS }}
+      shell: bash
+    - name: Assert changes in .storage-layout
+      if: ${{inputs.mode == check}}
+      run: ${{ github.action_path }}/forge-inspect.sh check ${{ steps.contracts_names.outputs.CONTRACTS }}
+      shell: bash
+    - name: Generate new .storage-layout file
+      if: ${{inputs.mode == generate}}
+      run: ${{ github.action_path }}/forge-inspect.sh generate ${{ steps.contracts_names.outputs.CONTRACTS }}
+      shell: bash
