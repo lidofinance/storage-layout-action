@@ -34,10 +34,10 @@ runs:
       run: echo ${{ steps.contracts_names.outputs.CONTRACTS }}
       shell: bash
     - name: Assert changes in .storage-layout
-      if: ${{inputs.mode == check}}
+      if: ${{ inputs.mode == "check" }}
       run: ${{ github.action_path }}/forge-inspect.sh check ${{ steps.contracts_names.outputs.CONTRACTS }}
       shell: bash
     - name: Generate new .storage-layout file
-      if: ${{inputs.mode == generate}}
+      if: ${{ inputs.mode == "generate" }}
       run: ${{ github.action_path }}/forge-inspect.sh generate ${{ steps.contracts_names.outputs.CONTRACTS }}
       shell: bash
