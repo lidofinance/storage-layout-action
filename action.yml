@@ -25,7 +25,7 @@ runs:
     - name: Collect contracts names
       id: contracts_names
       run: >
-        CONTRACTS=$(tr "\n" " " <<<$(sed "s/contract //g" <<<$(egrep -roh --exclude-dir=$IGNORE_FOLDERS "^contract\s\w+" $SRC_FOLDER)))
+        export CONTRACTS=$(tr "\n" " " <<<$(sed "s/contract //g" <<<$(egrep -roh --exclude-dir=$IGNORE_FOLDERS "^contract\s\w+" $SRC_FOLDER)));
         echo 'CONTRACTS=$CONTRACTS' >> $GITHUB_OUTPUT
       shell: bash
       env:
