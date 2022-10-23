@@ -21,7 +21,7 @@ runs:
     - name: Install foundry
       run: >
         curl -L https://foundry.paradigm.xyz | bash;
-        foundryup;
+        source /home/runner/.bashrc && foundryup;
       shell: bash
     - name: Collect contracts names
       id: contracts_names
