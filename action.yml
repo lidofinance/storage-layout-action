@@ -20,6 +20,8 @@ runs:
   steps:
     - name: Install Foundry
       uses: foundry-rs/foundry-toolchain@v1
+      with:
+        version: nightly
     - name: Collect contracts names
       id: contracts_names
       run: echo 'CONTRACTS=$(tr "\n" " " <<<$(sed "s/contract //g" <<<$(egrep -roh --exclude-dir=$IGNORE_FOLDERS "^contract\s\w+" $SRC_FOLDER)))) >> $GITHUB_OUTPUT
