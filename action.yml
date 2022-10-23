@@ -26,7 +26,7 @@ runs:
       id: contracts_names
       run: >
         export CONTRACTS=$(tr "\n" " " <<<$(sed "s/contract //g" <<<$(egrep -roh --exclude-dir=$IGNORE_FOLDERS "^contract\s\w+" $SRC_FOLDER)));
-        echo 'CONTRACTS=$CONTRACTS' >> $GITHUB_OUTPUT
+        echo "CONTRACTS=$CONTRACTS" >> $GITHUB_OUTPUT
       shell: bash
       env:
         SRC_FOLDER: ${{ inputs.src-folder }}
