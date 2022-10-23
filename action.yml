@@ -30,7 +30,7 @@ runs:
       shell: bash
       env:
         SRC_FOLDER: ${{ inputs.src-folder }}
-        IGNORE_FOLDERS: ${{ inputs.ignore-folder }}
+        IGNORE_FOLDERS: ${{ inputs.ignore-folders }}
     - name: Print contracts names
       run: echo ${{ steps.contracts_names.outputs.CONTRACTS }}
       shell: bash
