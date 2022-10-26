@@ -22,19 +22,10 @@ runs:
       uses: foundry-rs/foundry-toolchain@v1
       with:
         version: nightly
-    - name: Safe inputs
-      id: safe_inputs
-      run: >
-        echo "IGNORE_FOLDERS=$IGNORE_FOLDERS" >> $GITHUB_OUTPUT;
-        echo "SRC_FOLDER=$SRC_FOLDER" >> $GITHUB_OUTPUT
-      shell: bash
-      env:
-        SRC_FOLDER: ${{ inputs.src-folder }}
-        IGNORE_FOLDERS: ${{ inputs.ignore-folders }}
     - name: Collect contracts names
       id: contracts_names
       run: >
-        export CONTRACTS=$(tr "\n" " " <<<$(sed "s/contract //g" <<<$(egrep -roh --exclude-dir=${{ steps.safe_inputs.outputs.IGNORE_FOLDERS }} "^contract\s\w+" ${{ steps.safe_inputs.outputs.SRC_FOLDER }})));
+        export CONTRACTS=$(tr "\n" " " <<<$(sed "s/contract //g" <<<$(egrep -roh --exclude-dir=${{ inputs.ignore-folders }}"^contract\s\w+" ${{ inputs.src-folder }})));
         echo "CONTRACTS=$CONTRACTS" >> $GITHUB_OUTPUT
       shell: bash
     - name: Assert changes in .storage-layout
