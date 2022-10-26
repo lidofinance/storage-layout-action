@@ -22,15 +22,21 @@ runs:
       uses: foundry-rs/foundry-toolchain@v1
       with:
         version: nightly
-    - name: Collect contracts names
-      id: contracts_names
+    - name: Safe inputs
+      id: safe_inputs
       run: >
-        export CONTRACTS=$(tr "\n" " " <<<$(sed "s/contract //g" <<<$(egrep -roh --exclude-dir=$IGNORE_FOLDERS "^contract\s\w+" $SRC_FOLDER)));
-        echo "CONTRACTS=$CONTRACTS" >> $GITHUB_OUTPUT
+        echo "IGNORE_FOLDERS=$IGNORE_FOLDERS" >> $GITHUB_OUTPUT;
+        echo "SRC_FOLDER=$SRC_FOLDER" >> $GITHUB_OUTPUT
       shell: bash
       env:
         SRC_FOLDER: ${{ inputs.src-folder }}
         IGNORE_FOLDERS: ${{ inputs.ignore-folders }}
+    - name: Collect contracts names
+      id: contracts_names
+      run: >
+        export CONTRACTS=$(tr "\n" " " <<<$(sed "s/contract //g" <<<$(egrep -roh --exclude-dir=${{ steps.safe_inputs.outputs.IGNORE_FOLDERS }} "^contract\s\w+" ${{ steps.safe_inputs.outputs.SRC_FOLDER }})));
+        echo "CONTRACTS=$CONTRACTS" >> $GITHUB_OUTPUT
+      shell: bash
     - name: Print contracts names
       run: echo ${{ steps.contracts_names.outputs.CONTRACTS }}
       shell: bash
