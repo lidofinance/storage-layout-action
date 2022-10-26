@@ -37,9 +37,6 @@ runs:
         export CONTRACTS=$(tr "\n" " " <<<$(sed "s/contract //g" <<<$(egrep -roh --exclude-dir=${{ steps.safe_inputs.outputs.IGNORE_FOLDERS }} "^contract\s\w+" ${{ steps.safe_inputs.outputs.SRC_FOLDER }})));
         echo "CONTRACTS=$CONTRACTS" >> $GITHUB_OUTPUT
       shell: bash
-    - name: Print contracts names
-      run: echo ${{ steps.contracts_names.outputs.CONTRACTS }}
-      shell: bash
     - name: Assert changes in .storage-layout
       if: inputs.mode == 'check'
       run: ${{ github.action_path }}/forge-inspect.sh check ${{ steps.contracts_names.outputs.CONTRACTS }}
