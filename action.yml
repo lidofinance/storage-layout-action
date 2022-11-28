@@ -25,7 +25,7 @@ runs:
     - name: Collect contracts names
       id: contracts_names
       run: >
-        export CONTRACTS=$(tr "\n" " " <<<$(sed "s/contract //g" <<<$(egrep -roh --include="*.sol" --exclude-dir=${{ inputs.ignore-folders }} "^contract\s\w+" ${{ inputs.src-folder }})));
+        export CONTRACTS=$(tr "\n" " " <<<$(sed "s/contract //g" <<<$(egrep -roh --include="*.sol" --exclude-dir=${{ inputs.ignore-folders }} "^contract\s\w+" ${{ inputs.src-folder }} | sort)));
         echo "CONTRACTS=$CONTRACTS" >> $GITHUB_OUTPUT
       shell: bash
     - name: Assert changes in .storage-layout
