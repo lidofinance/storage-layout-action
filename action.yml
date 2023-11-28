@@ -7,7 +7,6 @@ inputs:
       generate - generate new .storage-layout file from existing contracts.
       check - check that storage layout matches one in the .storage-layout file
     default: check
-
   src-folder:
     description: "Path to folder with contracts sources"
     default: ./contracts
@@ -15,6 +14,10 @@ inputs:
     description: >
       Folders to exclude from contracts search.
       Ex: ./contracts/mock - ignore single folder, {mock,test,template} - ignore multiple folders by namegp
+  ignore-contracts:
+    description: "Regexp of contract names to ignore"
+    # a^ here is "match nothing" regexp, from https://stackoverflow.com/a/940840
+    default: "a^"
 runs:
   using: "composite"
   steps:
@@ -25,7 +28,7 @@ runs:
     - name: Collect contracts names
       id: contracts_names
       run: >
-        export CONTRACTS=$(tr "\n" " " <<<$(sed "s/contract //g" <<<$(egrep -roh --include="*.sol" --exclude-dir=${{ inputs.ignore-folders }} "^contract\s\w+" ${{ inputs.src-folder }} | sort)));
+        export CONTRACTS=$(tr "\n" " " <<<$(sed -E "s/${{ inputs.ignore-contracts }}//g" <<<$(sed "s/contract //g" <<<$(egrep -roh --include="*.sol" --exclude-dir=${{ inputs.ignore-folders }} "^contract\s\w+" ${{ inputs.src-folder }} | sort))));
         echo "CONTRACTS=$CONTRACTS" >> $GITHUB_OUTPUT
       shell: bash
     - name: Assert changes in .storage-layout
